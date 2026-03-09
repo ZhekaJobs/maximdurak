@@ -19,7 +19,6 @@
             height: 100vh;
         }
 
-        /* гифка почти на весь экран */
 
         .load {
             position: absolute;
@@ -29,7 +28,6 @@
             z-index: 1;
         }
 
-        /* слой VHS */
 
         .vhs {
             position: fixed;
@@ -43,8 +41,6 @@
             animation: vhsScroll 10s linear infinite;
         }
 
-        /* бесконечное движение */
-
         @keyframes vhsScroll {
             0% {
                 transform: translateY(0);
@@ -54,8 +50,6 @@
                 transform: translateY(33.33%);
             }
         }
-
-        /* лёгкое дрожание */
 
         .vhs::after {
             content: "";
@@ -92,5 +86,4 @@
 </body>
 </html>
 
-<!-- git add . && git commit -m "update" && sgit push
-    git add . && git commit -m "update" && git push-->
+<!--git add . && git commit -m "update" && git push-->

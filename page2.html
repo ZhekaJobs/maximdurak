@@ -46,7 +46,6 @@
             margin-bottom: 25px;
         }
 
-        /* форма и textarea */
         form {
             position: relative;
         }
@@ -62,13 +61,12 @@
             padding: 10px;
             box-sizing: border-box;
             outline: none;
-            caret-color: transparent; /* прячем стандартный курсор */
+            caret-color: transparent;
             overflow: auto;
             white-space: pre-wrap;
             position: relative;
         }
 
-        /* кнопка */
         button {
             margin-top: 15px;
             background: black;
@@ -89,7 +87,6 @@
             max-width: 70%;
         }
 
-        /* виртуальный курсор */
         .cursor {
             position: absolute;
             width: 10px;
@@ -139,18 +136,17 @@
         const cursor = document.getElementById("cursor");
         const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:',.<>/?";
 
-        // функция для обновления позиции курсора
         function updateCursor() {
             const text = textarea.value;
             const lines = text.split("\n");
             const lastLine = lines[lines.length - 1];
             const lineHeight = parseInt(getComputedStyle(textarea).lineHeight) || 20;
-            const charWidth = 10; // примерная ширина символа
+            const charWidth = 10; 
 
-            let top = lineHeight * (lines.length - 1) + 10; // padding
+            let top = lineHeight * (lines.length - 1) + 10; 
             let left = charWidth * lastLine.length + 10;
 
-            // ограничение границ textarea
+ 
             left = Math.min(left, textarea.clientWidth - 10);
             top = Math.min(top, textarea.clientHeight - parseInt(lineHeight));
 
@@ -158,7 +154,7 @@
             cursor.style.left = left + "px";
         }
 
-        // быстрый перебор рандомных символов перед добавлением буквы
+        //рандом символы
         function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
 
         textarea.addEventListener("keydown", async (e) => {
@@ -169,19 +165,18 @@
         });
 
         async function typeChar(char) {
-            let iterations = 2 + Math.floor(Math.random() * 2); // быстрый перебор
+            let iterations = 2 + Math.floor(Math.random() * 2); 
             let current = textarea.value;
             for (let i = 0; i < iterations; i++) {
                 textarea.value = current + chars.charAt(Math.floor(Math.random() * chars.length));
                 updateCursor();
-                await wait(10); // ускорено
+                await wait(10); 
             }
             textarea.value = current + char;
             textarea.scrollTop = textarea.scrollHeight;
             updateCursor();
         }
 
-        // обновляем курсор при прокрутке и каждые 50мс
         textarea.addEventListener("scroll", updateCursor);
         setInterval(updateCursor, 50);
         updateCursor();
