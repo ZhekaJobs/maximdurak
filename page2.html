@@ -1,17 +1,126 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>page2</title>
+    <title>matrix page</title>
+
     <style>
+
         body {
             margin: 0;
             background: black;
+            color: #00ff66;
+            font-family: "Courier New", monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* рамка */
+
+        .frame {
+            width: 90%;
+            height: 90%;
+            border: 3px solid #00ff66;
+            box-shadow: 0 0 10px #00ff66, 0 0 20px #00ff66, inset 0 0 10px #00ff66;
+            display: flex;
+        }
+
+        /* левая сторона */
+
+        .left {
+            width: 50%;
+            padding: 40px;
+            box-sizing: border-box;
+        }
+
+        /* правая сторона */
+
+        .right {
+            width: 50%;
+            border-left: 2px solid #00ff66;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* текст */
+
+        .title {
+            font-size: 42px;
+            margin-bottom: 20px;
+        }
+
+        .subtitle {
+            font-size: 22px;
+            margin-bottom: 25px;
+        }
+
+        /* поле */
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            background: black;
+            color: #00ff66;
+            border: 2px solid #00ff66;
+            font-family: inherit;
+            font-size: 18px;
+            padding: 10px;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        /* кнопка */
+
+        button {
+            margin-top: 15px;
+            background: black;
+            color: #00ff66;
+            border: 2px solid #00ff66;
+            padding: 10px 20px;
+            font-family: inherit;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* гифка */
+
+        .right img {
+            max-width: 80%;
         }
     </style>
 </head>
 
 <body>
+
+    <div class="frame">
+
+        <div class="left">
+
+            <div class="title">
+                welcome, dear dogGg
+            </div>
+
+            <div class="subtitle">
+                this page soo empty<br>
+                u can write what is missing from it:
+            </div>
+
+<textarea placeholder="write message..."></textarea>
+
+            <button>send</button>
+
+        </div>
+
+        <div class="right">
+
+            <img src="matrix.gif">
+
+        </div>
+
+    </div>
 
 </body>
 </html>
