@@ -2,10 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>matrix</title>
+    <title>matrix page</title>
 
     <style>
-
         body {
             margin: 0;
             background: black;
@@ -26,7 +25,6 @@
         }
 
         /* левая часть */
-
         .left {
             width: 50%;
             padding: 35px;
@@ -34,7 +32,6 @@
         }
 
         /* правая часть */
-
         .right {
             width: 50%;
             border-left: 2px solid #00ff66;
@@ -44,7 +41,6 @@
         }
 
         /* текст */
-
         .title {
             font-size: 40px;
             margin-bottom: 20px;
@@ -55,8 +51,12 @@
             margin-bottom: 25px;
         }
 
-        /* поле */
+        /* форма */
+        form {
+            position: relative;
+        }
 
+        /* поле ввода */
         textarea {
             width: 100%;
             height: 200px;
@@ -68,10 +68,13 @@
             padding: 10px;
             box-sizing: border-box;
             outline: none;
+            caret-color: transparent; /* прячем стандартный курсор */
+            white-space: pre-wrap;
+            overflow: auto;
+            position: relative;
         }
 
         /* кнопка */
-
         button {
             margin-top: 15px;
             background: black;
@@ -88,30 +91,11 @@
             }
 
         /* гифка */
-
         .right img {
             max-width: 70%;
         }
-        /* стиль текстового поля */
 
-        textarea {
-            width: 600px;
-            height: 200px;
-            background: black;
-            color: #00ff66;
-            border: 2px solid #00ff66;
-            font-family: inherit;
-            font-size: 18px;
-            padding: 10px;
-            box-sizing: border-box;
-            outline: none;
-            caret-color: transparent;
-            position: relative;
-            overflow: auto;
-            white-space: pre-wrap;
-        }
-
-
+        /* кастомный курсор */
         .cursor {
             display: inline-block;
             width: 10px;
@@ -139,38 +123,29 @@
 
         <div class="left">
 
-            <div class="title">
-                welcome, dear dogGg
-            </div>
-
+            <div class="title">welcome, dear dogGg</div>
             <div class="subtitle">
                 this page soo empty<br>
                 u can write what is missing from it:
             </div>
 
-            <form action="https://formspree.io/f/xaqpqzja" method="POST">
-
-<textarea name="message" placeholder="write message..."></textarea>
-
+            <form action="https://formspree.io/f/xaqpqzja" method="POST" id="messageForm">
+                <textarea name="message" id="console" placeholder="write message..."></textarea>
+                <span class="cursor" id="cursor"></span>
                 <button type="submit">send</button>
-
             </form>
 
         </div>
 
         <div class="right">
-
             <img src="matrix.gif">
-
         </div>
 
     </div>
+
     <script>
         const textarea = document.getElementById("console");
-        const cursor = document.createElement("span");
-        cursor.className = "cursor";
-        cursor.textContent = " ";
-        textarea.parentNode.insertBefore(cursor, textarea.nextSibling);
+        const cursor = document.getElementById("cursor");
 
         const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:',.<>/?";
 
@@ -184,7 +159,7 @@
         function wait(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
 
         async function typeChar(char) {
-            let iterations = 5 + Math.floor(Math.random() * 5); // сколько рандомных символов показать
+            let iterations = 5 + Math.floor(Math.random() * 5); // сколько случайных символов показать
             let current = textarea.value;
             for (let i = 0; i < iterations; i++) {
                 textarea.value = current + chars.charAt(Math.floor(Math.random() * chars.length));
@@ -194,6 +169,6 @@
             textarea.scrollTop = textarea.scrollHeight; // автопрокрутка вниз
         }
     </script>
-<textarea id="console"></textarea>
+
 </body>
 </html>
