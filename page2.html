@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>matrix page</title>
+    <title>Matrix Console</title>
     <style>
         body {
             margin: 0;
@@ -12,6 +12,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            color: #00ff66;
         }
 
         .frame {
@@ -22,24 +23,19 @@
             display: flex;
         }
 
-        /* левая часть */
         .left {
             width: 50%;
             padding: 35px;
             box-sizing: border-box;
-            color: #00ff66;
         }
 
-        /* правая часть */
         .right {
             width: 50%;
-            border-left: 2px solid #00ff66;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* текст */
         .title {
             font-size: 40px;
             margin-bottom: 20px;
@@ -50,21 +46,43 @@
             margin-bottom: 25px;
         }
 
-        /* имитация textarea */
-        .console {
+        /* textarea для ввода */
+        textarea {
             width: 100%;
-            min-height: 200px;
+            height: 200px;
             background: black;
+            color: #00ff66;
             border: 2px solid #00ff66;
-            padding: 10px;
-            box-sizing: border-box;
             font-family: inherit;
             font-size: 18px;
+            padding: 10px;
+            box-sizing: border-box;
+            outline: none;
+            caret-color: transparent; /* прячем стандартный курсор */
             white-space: pre-wrap;
             overflow: auto;
+            position: relative;
         }
 
-        /* кнопка */
+        /* мигающий прямоугольник курсора */
+        .cursor {
+            position: absolute;
+            width: 10px;
+            height: 1.2em;
+            background: #00ff66;
+            animation: blink 0.6s step-start infinite;
+        }
+
+        @keyframes blink {
+            0%,50% {
+                opacity: 1;
+            }
+
+            51%,100% {
+                opacity: 0;
+            }
+        }
+
         button {
             margin-top: 15px;
             background: black;
@@ -80,24 +98,8 @@
                 background: #001a00;
             }
 
-        /* курсор */
-        .cursor {
-            display: inline-block;
-            width: 10px;
-            height: 18px;
-            background: #00ff66;
-            animation: blink 0.6s step-start infinite;
-            vertical-align: bottom;
-        }
-
-        @keyframes blink {
-            0%,50% {
-                opacity: 1;
-            }
-
-            51%,100% {
-                opacity: 0;
-            }
+        .right img {
+            max-width: 70%;
         }
     </style>
 </head>
@@ -112,45 +114,70 @@
                 u can write what is missing from it:
             </div>
 
-            <form action="https://formspree.io/f/xaqpqzja" method="POST">
-                <div id="console" class="console" contenteditable="true"></div>
-                <input type="hidden" name="message" id="hiddenMessage">
-                <button type="submit" onclick="document.getElementById('hiddenMessage').value=document.getElementById('console').innerText;">send</button>
+            <form action="https://formspree.io/f/xaqpqzja" method="POST" id="messageForm" style="position:relative;">
+                <textarea name="message" id="console" placeholder="write message..."></textarea>
+                <span class="cursor" id="cursor"></span>
+                <button type="submit">send</button>
             </form>
         </div>
 
         <div class="right">
-            <img src="matrix.gif" style="max-width:70%;">
+            <img src="matrix.gif">
         </div>
 
     </div>
 
     <script>
-        const consoleDiv = document.getElementById("console");
+        const textarea = document.getElementById("console");
+        const cursor = document.getElementById("cursor");
         const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:',.<>/?";
 
-        consoleDiv.focus();
+        // функция обновления позиции курсора
+        function updateCursor() {
+            const text = textarea.value;
+            const lines = text.split("\n");
+            const lastLine = lines[lines.length - 1];
+            const col = lastLine.length;
+            const row = lines.length - 1;
 
-        consoleDiv.addEventListener("keypress", async (e) => {
+            const lineHeight = parseInt(window.getComputedStyle(textarea).lineHeight) || 20;
+            const charWidth = 10; // примерная ширина символа
+
+            const topPos = textarea.offsetTop + row * lineHeight + 10;
+            const leftPos = textarea.offsetLeft + col * charWidth + 10;
+            cursor.style.top = topPos + "px";
+            cursor.style.left = leftPos + "px";
+        }
+
+        // фокус на textarea
+        textarea.focus();
+        updateCursor();
+
+        // слушаем ввод
+        textarea.addEventListener("keydown", async (e) => {
             if (e.key.length === 1) {
                 e.preventDefault();
                 await typeChar(e.key);
             }
         });
 
-        function wait(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
-
+        // быстрый перебор рандомных символов перед буквой
+        function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
         async function typeChar(char) {
-            let iterations = 3 + Math.floor(Math.random() * 3); // меньше итераций → быстрее
-            let current = consoleDiv.innerText;
+            let iterations = 2 + Math.floor(Math.random() * 2); // быстро
+            let current = textarea.value;
             for (let i = 0; i < iterations; i++) {
-                consoleDiv.innerText = current + chars.charAt(Math.floor(Math.random() * chars.length));
-                consoleDiv.scrollTop = consoleDiv.scrollHeight;
-                await wait(15); // ускорено
+                textarea.value = current + chars.charAt(Math.floor(Math.random() * chars.length));
+                updateCursor();
+                await wait(10); // очень быстро
             }
-            consoleDiv.innerText = current + char; // настоящая буква
-            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+            textarea.value = current + char;
+            textarea.scrollTop = textarea.scrollHeight;
+            updateCursor();
         }
+
+        // обновляем позицию курсора каждые 50мс (если пользователь выделяет текст)
+        setInterval(updateCursor, 50);
     </script>
 
 </body>
