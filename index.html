@@ -1,81 +1,88 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<title>04.02</title>
-<style>
-  body {
-    margin: 0;
-    background: black;
-    color: white;
-    font-family: "Courier New", Courier, monospace;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    height: 100vh;
-    padding: 20px;
-    box-sizing: border-box;
-  }
+    <meta charset="UTF-8">
 
-  .text-block {
-    max-width: 800px;
-    line-height: 1.6;
-    white-space: pre-wrap; 
-    text-align: left;
-  }
-  
-  .text-block1 {
-    max-width: 300px;
-    line-height: 1.6;
-    white-space: pre-wrap; 
-    text-align: middle;
-  }
-  .love-block {
-    color: black; /* черный текст */
-    font-size: 2em;
-    font-weight: bold;
-    margin-top: 10px;
-  }
+    <meta http-equiv="refresh" content="8; url=page2.html">
 
-  .gif-container {
-    margin-bottom: 20px;
-  }
+    <title>load</title>
 
-  img {
-    width: 100px;
-    height: 100px;
-  }
-</style>
+    <style>
+
+        body {
+            margin: 0;
+            background: black;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .load {
+            position: relative;
+            z-index: 2;
+            width: 300px;
+            height: 300px;
+            object-fit: contain;
+        }
+
+
+        .vhs {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+            background: repeating-linear-gradient( to bottom, rgba(0,255,120,0.15) 0px, rgba(0,255,120,0.15) 1px, transparent 2px, transparent 6px );
+            animation: vhsMove 6s linear infinite;
+        }
+
+
+        @keyframes vhsMove {
+            0% {
+                transform: translateY(-100px);
+            }
+
+            100% {
+                transform: translateY(100px);
+            }
+        }
+
+        .vhs::after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient( to bottom, rgba(0,255,120,0.25) 0px, rgba(0,255,120,0.25) 1px, transparent 3px, transparent 8px );
+            mix-blend-mode: screen;
+            animation: glitch 0.2s infinite;
+        }
+
+        @keyframes glitch {
+            0% {
+                transform: translateX(0);
+            }
+
+            50% {
+                transform: translateX(1px);
+            }
+
+            100% {
+                transform: translateX(-1px);
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<div class="text-block">
-это слишком для меня. я не думаю, что<br>
-заслуживаю подобного. я постараюсь принять это.<br>
-нет сомнения в искренности и верности твоих слов.<br>
-дай мне немного времени, такого в свой адрес я никогда не слышала.<br>
-мне жаль, что тебе приходится ждать. борюсь с этими диаметральными чувствами.<br>
-ты чудеснее. и мне тревожно. напишу после координат, отправлюсь завтра.<br>
-кстати, я ввела в game.exe правильный пароль не получив подсказку для пароля из первого екзешника.<br><br><br>
-спасибо.<br><br><br>
-это самое ценное, что я получала <br>
-песня добила...<br>
-сейчас я починю пуговицу и поохуеваю
-</div>
+    <img src="load.gif" class="load">
 
-<div class="gif-container">
-  <img src="disk.gif" alt="GIF">
-</div>
+    <div class="vhs"></div>
 
-
-<div class="text-block1">
-мне стоит добавить хаха форму для общения, а то бедолагу оставляю просто как читателя<br>
-вот тебе и первый прототип pairnet - выдели этот текст
-</div>
-<div class="love-block">
-  love and field
-</div>
 </body>
 </html>
 <!-- git add . && git commit -m "update" && sgit push  -->
