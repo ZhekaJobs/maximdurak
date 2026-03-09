@@ -1,26 +1,58 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>disk</title>
+<title>Console Text + GIF</title>
 <style>
-body{
-  margin:0;
-  background:black;
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-img{
-  width:100px;
-  height:100px;
-}
+  body {
+    margin: 0;
+    background: black;
+    color: white;
+    font-family: "Courier New", Courier, monospace;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .text-block {
+    max-width: 800px;
+    line-height: 1.6;
+    white-space: pre-wrap; /* перенос по переносу строки */
+    text-align: left;
+  }
+
+  .gif-container {
+    margin-bottom: 20px;
+  }
+
+  img {
+    width: 100px;
+    height: 100px;
+  }
 </style>
 </head>
 <body>
 
-<img src="disk.gif">
+<div class="text-block">
+это слишком для меня. я не думаю, что<br>
+заслуживаю подобного. я постараюсь принять это.<br>
+нет сомнения в искренности и верности твоих слов.<br>
+дай мне немного времени, такого в свой адрес я никогда не слышала.<br>
+мне жаль, что тебе приходится ждать. борюсь с этими диаметральными чувствами.<br>
+ты чудеснее. и мне тревожно. напишу после координат, отправлюсь завтра.<br>
+кстати, я ввела в game.exe правильный пароль не получив подсказку для пароля из первого екзешника.<br>
+спасибо. это самое ценное, что я получала. поэтому немного не в своей тарелке.<br>
+песня добила...
+</div>
+
+<div class="gif-container">
+  <img src="disk.gif" alt="GIF">
+</div>
 
 </body>
 </html>
+/* git add . && git commit -m "update" && git push */
