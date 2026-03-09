@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>matrix page</title>
-
     <style>
         body {
             margin: 0;
             background: black;
-            color: #00ff66;
             font-family: "Courier New", monospace;
             display: flex;
             justify-content: center;
@@ -29,6 +27,7 @@
             width: 50%;
             padding: 35px;
             box-sizing: border-box;
+            color: #00ff66;
         }
 
         /* правая часть */
@@ -51,27 +50,18 @@
             margin-bottom: 25px;
         }
 
-        /* форма */
-        form {
-            position: relative;
-        }
-
-        /* поле ввода */
-        textarea {
+        /* имитация textarea */
+        .console {
             width: 100%;
-            height: 200px;
+            min-height: 200px;
             background: black;
-            color: #00ff66;
             border: 2px solid #00ff66;
-            font-family: inherit;
-            font-size: 18px;
             padding: 10px;
             box-sizing: border-box;
-            outline: none;
-            caret-color: transparent; /* прячем стандартный курсор */
+            font-family: inherit;
+            font-size: 18px;
             white-space: pre-wrap;
             overflow: auto;
-            position: relative;
         }
 
         /* кнопка */
@@ -90,12 +80,7 @@
                 background: #001a00;
             }
 
-        /* гифка */
-        .right img {
-            max-width: 70%;
-        }
-
-        /* кастомный курсор */
+        /* курсор */
         .cursor {
             display: inline-block;
             width: 10px;
@@ -116,40 +101,37 @@
         }
     </style>
 </head>
-
 <body>
 
     <div class="frame">
 
         <div class="left">
-
             <div class="title">welcome, dear dogGg</div>
             <div class="subtitle">
                 this page soo empty<br>
                 u can write what is missing from it:
             </div>
 
-            <form action="https://formspree.io/f/xaqpqzja" method="POST" id="messageForm">
-                <textarea name="message" id="console" placeholder="write message..."></textarea>
-                <span class="cursor" id="cursor"></span>
-                <button type="submit">send</button>
+            <form action="https://formspree.io/f/xaqpqzja" method="POST">
+                <div id="console" class="console" contenteditable="true"></div>
+                <input type="hidden" name="message" id="hiddenMessage">
+                <button type="submit" onclick="document.getElementById('hiddenMessage').value=document.getElementById('console').innerText;">send</button>
             </form>
-
         </div>
 
         <div class="right">
-            <img src="matrix.gif">
+            <img src="matrix.gif" style="max-width:70%;">
         </div>
 
     </div>
 
     <script>
-        const textarea = document.getElementById("console");
-        const cursor = document.getElementById("cursor");
-
+        const consoleDiv = document.getElementById("console");
         const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:',.<>/?";
 
-        textarea.addEventListener("keydown", async function (e) {
+        consoleDiv.focus();
+
+        consoleDiv.addEventListener("keypress", async (e) => {
             if (e.key.length === 1) {
                 e.preventDefault();
                 await typeChar(e.key);
@@ -159,14 +141,15 @@
         function wait(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
 
         async function typeChar(char) {
-            let iterations = 5 + Math.floor(Math.random() * 5); // сколько случайных символов показать
-            let current = textarea.value;
+            let iterations = 3 + Math.floor(Math.random() * 3); // меньше итераций → быстрее
+            let current = consoleDiv.innerText;
             for (let i = 0; i < iterations; i++) {
-                textarea.value = current + chars.charAt(Math.floor(Math.random() * chars.length));
-                await wait(30); // скорость перебора
+                consoleDiv.innerText = current + chars.charAt(Math.floor(Math.random() * chars.length));
+                consoleDiv.scrollTop = consoleDiv.scrollHeight;
+                await wait(15); // ускорено
             }
-            textarea.value = current + char; // нужная буква
-            textarea.scrollTop = textarea.scrollHeight; // автопрокрутка вниз
+            consoleDiv.innerText = current + char; // настоящая буква
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
         }
     </script>
 
