@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Matrix Console</title>
+    <title>Matrix Terminal Page</title>
     <style>
         body {
             margin: 0;
@@ -46,7 +46,11 @@
             margin-bottom: 25px;
         }
 
-        /* textarea для ввода */
+        /* форма и textarea */
+        form {
+            position: relative;
+        }
+
         textarea {
             width: 100%;
             height: 200px;
@@ -59,30 +63,12 @@
             box-sizing: border-box;
             outline: none;
             caret-color: transparent; /* прячем стандартный курсор */
-            white-space: pre-wrap;
             overflow: auto;
+            white-space: pre-wrap;
             position: relative;
         }
 
-        /* мигающий прямоугольник курсора */
-        .cursor {
-            position: absolute;
-            width: 10px;
-            height: 1.2em;
-            background: #00ff66;
-            animation: blink 0.6s step-start infinite;
-        }
-
-        @keyframes blink {
-            0%,50% {
-                opacity: 1;
-            }
-
-            51%,100% {
-                opacity: 0;
-            }
-        }
-
+        /* кнопка */
         button {
             margin-top: 15px;
             background: black;
@@ -98,8 +84,29 @@
                 background: #001a00;
             }
 
+        /* гифка справа */
         .right img {
             max-width: 70%;
+        }
+
+        /* виртуальный курсор */
+        .cursor {
+            position: absolute;
+            width: 10px;
+            height: 1.2em;
+            background: #00ff66;
+            animation: blink 0.6s step-start infinite;
+            pointer-events: none;
+        }
+
+        @keyframes blink {
+            0%,50% {
+                opacity: 1;
+            }
+
+            51%,100% {
+                opacity: 0;
+            }
         }
     </style>
 </head>
@@ -114,9 +121,9 @@
                 u can write what is missing from it:
             </div>
 
-            <form action="https://formspree.io/f/xaqpqzja" method="POST" id="messageForm" style="position:relative;">
+            <form action="https://formspree.io/f/xaqpqzja" method="POST">
                 <textarea name="message" id="console" placeholder="write message..."></textarea>
-                <span class="cursor" id="cursor"></span>
+                <span id="cursor" class="cursor"></span>
                 <button type="submit">send</button>
             </form>
         </div>
@@ -132,28 +139,28 @@
         const cursor = document.getElementById("cursor");
         const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:',.<>/?";
 
-        // функция обновления позиции курсора
+        // функция для обновления позиции курсора
         function updateCursor() {
             const text = textarea.value;
             const lines = text.split("\n");
             const lastLine = lines[lines.length - 1];
-            const col = lastLine.length;
-            const row = lines.length - 1;
-
-            const lineHeight = parseInt(window.getComputedStyle(textarea).lineHeight) || 20;
+            const lineHeight = parseInt(getComputedStyle(textarea).lineHeight) || 20;
             const charWidth = 10; // примерная ширина символа
 
-            const topPos = textarea.offsetTop + row * lineHeight + 10;
-            const leftPos = textarea.offsetLeft + col * charWidth + 10;
-            cursor.style.top = topPos + "px";
-            cursor.style.left = leftPos + "px";
+            let top = lineHeight * (lines.length - 1) + 10; // padding
+            let left = charWidth * lastLine.length + 10;
+
+            // ограничение границ textarea
+            left = Math.min(left, textarea.clientWidth - 10);
+            top = Math.min(top, textarea.clientHeight - parseInt(lineHeight));
+
+            cursor.style.top = top + "px";
+            cursor.style.left = left + "px";
         }
 
-        // фокус на textarea
-        textarea.focus();
-        updateCursor();
+        // быстрый перебор рандомных символов перед добавлением буквы
+        function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-        // слушаем ввод
         textarea.addEventListener("keydown", async (e) => {
             if (e.key.length === 1) {
                 e.preventDefault();
@@ -161,23 +168,23 @@
             }
         });
 
-        // быстрый перебор рандомных символов перед буквой
-        function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
         async function typeChar(char) {
-            let iterations = 2 + Math.floor(Math.random() * 2); // быстро
+            let iterations = 2 + Math.floor(Math.random() * 2); // быстрый перебор
             let current = textarea.value;
             for (let i = 0; i < iterations; i++) {
                 textarea.value = current + chars.charAt(Math.floor(Math.random() * chars.length));
                 updateCursor();
-                await wait(10); // очень быстро
+                await wait(10); // ускорено
             }
             textarea.value = current + char;
             textarea.scrollTop = textarea.scrollHeight;
             updateCursor();
         }
 
-        // обновляем позицию курсора каждые 50мс (если пользователь выделяет текст)
+        // обновляем курсор при прокрутке и каждые 50мс
+        textarea.addEventListener("scroll", updateCursor);
         setInterval(updateCursor, 50);
+        updateCursor();
     </script>
 
 </body>
