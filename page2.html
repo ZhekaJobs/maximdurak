@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>matrix page</title>
+    <title>matrix</title>
 
     <style>
 
@@ -16,8 +16,6 @@
             align-items: center;
             height: 100vh;
         }
-
-        /* рамка */
 
         .frame {
             width: 80%;
@@ -97,40 +95,39 @@
         /* стиль текстового поля */
 
         textarea {
-            width: 100%;
+            width: 600px;
             height: 200px;
             background: black;
             color: #00ff66;
             border: 2px solid #00ff66;
-            font-family: "Courier New", monospace;
+            font-family: inherit;
             font-size: 18px;
             padding: 10px;
             box-sizing: border-box;
             outline: none;
-            caret-color: #00ff66;
-            /* эффект старого монитора */
-
-            text-shadow: 0 0 4px #00ff66;
+            caret-color: transparent;
+            position: relative;
+            overflow: auto;
+            white-space: pre-wrap;
         }
 
-            /* мигающий курсор */
 
-            textarea:focus {
-                animation: crt 1s infinite;
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 18px;
+            background: #00ff66;
+            animation: blink 0.6s step-start infinite;
+            vertical-align: bottom;
+        }
+
+        @keyframes blink {
+            0%,50% {
+                opacity: 1;
             }
 
-        @keyframes crt {
-
-            0% {
-                text-shadow: 0 0 4px #00ff66;
-            }
-
-            50% {
-                text-shadow: 0 0 8px #00ff66;
-            }
-
-            100% {
-                text-shadow: 0 0 4px #00ff66;
+            51%,100% {
+                opacity: 0;
             }
         }
     </style>
@@ -169,36 +166,34 @@
 
     </div>
     <script>
+        const textarea = document.getElementById("console");
+        const cursor = document.createElement("span");
+        cursor.className = "cursor";
+        cursor.textContent = " ";
+        textarea.parentNode.insertBefore(cursor, textarea.nextSibling);
 
-        const textarea = document.querySelector("textarea");
+        const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:',.<>/?";
 
-        textarea.addEventListener("keydown", function (e) {
-
+        textarea.addEventListener("keydown", async function (e) {
             if (e.key.length === 1) {
-
                 e.preventDefault();
-
-                let text = textarea.value;
-                let char = e.key;
-
-                let i = 0;
-
-                let interval = setInterval(() => {
-
-                    textarea.value = text + char.slice(0, i + 1);
-
-                    i++;
-
-                    if (i >= char.length) {
-                        clearInterval(interval);
-                    }
-
-                }, 40);
-
+                await typeChar(e.key);
             }
-
         });
 
+        function wait(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+
+        async function typeChar(char) {
+            let iterations = 5 + Math.floor(Math.random() * 5); // сколько рандомных символов показать
+            let current = textarea.value;
+            for (let i = 0; i < iterations; i++) {
+                textarea.value = current + chars.charAt(Math.floor(Math.random() * chars.length));
+                await wait(30); // скорость перебора
+            }
+            textarea.value = current + char; // нужная буква
+            textarea.scrollTop = textarea.scrollHeight; // автопрокрутка вниз
+        }
     </script>
+<textarea id="console"></textarea>
 </body>
 </html>
